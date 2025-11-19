@@ -116,3 +116,23 @@ async def upload_file(
 @app.get("/logout")
 def logout():
     return RedirectResponse(url="/login")
+
+
+# ---------------------------------
+# Eliminar archivo
+# ---------------------------------
+@app.get("/delete/{archivo_id}")
+def delete_file(archivo_id: int, usuario_id: int):
+    db = SessionLocal()
+    archivo_db = db.query(Archivo).filter(Archivo.id == archivo_id).first()
+    if archivo_db:
+        # eliminar archivo físico
+        file_path = os.path.join(UPLOAD_FOLDER, archivo_db.ruta)
+        if os.path.exists(file_path):
+            os.remove(file_path)
+        # eliminar de la base de datos
+        db.delete(archivo_db)
+        db.commit()
+    db.close()
+    # redirigir al formulario de subida
+    return RedirectResponse(url=f"/upload?usuario_id={usuario_id}", status_code=303)

@@ -12,46 +12,46 @@
       }
 
       /* Sidebar */
-     .sidebar {
-        background-color: #13613D;
-  min-width: 220px;
-  max-width: 220px;
-  height: 100vh;
-  color: #fff;
-  position: fixed;
-  top: 0;
-  left: 0;
-  padding-top: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-}
+      .sidebar {
+        background-color: #13613d;
+        min-width: 220px;
+        max-width: 220px;
+        height: 100vh;
+        color: #fff;
+        position: fixed;
+        top: 0;
+        left: 0;
+        padding-top: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+      }
 
-.sidebar-header {
-  background-color: #13613D;
-  border-bottom: 1px solid rgba(255,255,255,0.2);
-}
+      .sidebar-header {
+        background-color: #13613d;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+      }
 
-.sidebar a.sidebar-link {
-  color: #fff;
-  display: flex;
-  background-color: #13613D;
-  align-items: center;
-  padding: 15px 20px;
-  text-decoration: none;
-  font-weight: 500;
-  font-size: 1rem;
-  transition: background 0.3s, padding-left 0.3s;
-}
+      .sidebar a.sidebar-link {
+        color: #fff;
+        display: flex;
+        background-color: #13613d;
+        align-items: center;
+        padding: 15px 20px;
+        text-decoration: none;
+        font-weight: 500;
+        font-size: 1rem;
+        transition: background 0.3s, padding-left 0.3s;
+      }
 
-.sidebar a.sidebar-link:hover {
-background-color: #13613D;
-  padding-left: 25px;
-}
+      .sidebar a.sidebar-link:hover {
+        background-color: #13613d;
+        padding-left: 25px;
+      }
 
-.sidebar a i {
-  font-size: 1.2rem;
-}
+      .sidebar a i {
+        font-size: 1.2rem;
+      }
 
       /* Header */
       .dashboard-header {
@@ -72,7 +72,7 @@ background-color: #13613D;
       .main-content {
         margin-left: 220px; /* espacio del sidebar */
         padding: 30px;
-        padding-top:100px ;
+        padding-top: 100px;
         display: flex;
         flex-direction: column;
         align-items: center; /* centra horizontalmente */
@@ -171,14 +171,13 @@ background-color: #13613D;
   <body>
     <!-- Sidebar -->
     <div class="sidebar">
-  <div class="sidebar-header text-center py-4">
-    <img src="/images/logo_blanco.png" alt="Logo" class="logo mb-2" style="width:50px; height:auto;"/>
-    <h4 class="m-0">Dashboard</h4>
-  </div>
-  <a href="#" class="sidebar-link"><i class="bi bi-folder me-2"></i> Archivos</a>
-  <a href="/logout" class="sidebar-link"><i class="bi bi-box-arrow-right me-2"></i> Cerrar sesión</a>
-</div>
-
+      <div class="sidebar-header text-center py-4">
+        <img src="/images/logo_blanco.png" alt="Logo" class="logo mb-2" style="width: 50px; height: auto" />
+        <h4 class="m-0">Dashboard</h4>
+      </div>
+      <a href="#" class="sidebar-link"><i class="bi bi-folder me-2"></i> Archivos</a>
+      <a href="/logout" class="sidebar-link"><i class="bi bi-box-arrow-right me-2"></i> Cerrar sesión</a>
+    </div>
 
     <!-- Header -->
     <div class="dashboard-header">
@@ -215,39 +214,43 @@ background-color: #13613D;
           </div>
         </form>
       </div>
-
       <h4>Archivos subidos:</h4>
-      <div class="archivos">
-        {% for archivo in archivos %} {% set ext = archivo.nombre.lower().split('.')[-1] %}
-        <a
-          href="/{{ archivo.ruta }}"
-          target="_blank"
-          class="archivo-cuadro {% if ext == 'pdf' %}archivo-pdf {% elif ext in ['doc','docx'] %}archivo-word {% elif ext in ['xls','xlsx'] %}archivo-excel {% else %}archivo-otro{% endif %}"
-        >
-          {% if ext in ['png','jpg','jpeg','gif'] %}
-          <img
-            src="/{{ archivo.ruta }}"
-            alt="{{ archivo.nombre }}"
-            style="max-width: 100%; max-height: 70px; margin-bottom: 5px"
-          />
-          {% elif ext == 'pdf' %}
+<div class="archivos">
+  {% for archivo in archivos %} 
+    {% set ext = archivo.nombre.lower().split('.')[-1] %}
+    <div class="archivo-cuadro position-relative {% if ext == 'pdf' %}archivo-pdf {% elif ext in ['doc','docx'] %}archivo-word {% elif ext in ['xls','xlsx'] %}archivo-excel {% else %}archivo-otro{% endif %}">
+      
+      <a href="/{{ archivo.ruta }}" target="_blank" style="text-decoration: none; color: inherit">
+        {% if ext in ['png','jpg','jpeg','gif'] %}
+          <img src="/{{ archivo.ruta }}" alt="{{ archivo.nombre }}" style="max-width: 100%; max-height: 70px; margin-bottom: 5px" />
+        {% elif ext == 'pdf' %}
           <i class="bi bi-file-earmark-pdf"></i>
-          {% elif ext in ["doc","docx"] %}
+        {% elif ext in ["doc","docx"] %}
           <i class="bi bi-file-earmark-word"></i>
-          {% elif ext in ["xls","xlsx"] %}
+        {% elif ext in ["xls","xlsx"] %}
           <i class="bi bi-file-earmark-spreadsheet"></i>
-          {% else %}
+        {% else %}
           <i class="bi bi-file-earmark"></i>
-          {% endif %}
+        {% endif %}
+        <span class="nombre-archivo">{{ archivo.nombre }}</span>
+      </a>
 
-          <span class="nombre-archivo">{{ archivo.nombre }}</span>
+      {% if archivo.comentarios %}
+        <div style="font-size: 0.7rem; color: #333; margin-top: 4px">{{ archivo.comentarios }}</div>
+      {% endif %}
 
-          {% if archivo.comentarios %}
-          <div style="font-size: 0.7rem; color: #333; margin-top: 4px">{{ archivo.comentarios }}</div>
-          {% endif %}
-        </a>
-        {% endfor %}
-      </div>
+      <!-- Botón de eliminar como X en esquina superior derecha -->
+      <a href="/delete/{{ archivo.id }}?usuario_id={{ usuario.id }}" 
+         class="position-absolute top-0 end-0 m-1"
+         style="color: #fff; background-color: #dc3545; border-radius: 50%; width: 20px; height: 20px; text-align: center; line-height: 18px; font-weight: bold; font-size: 12px; z-index:10; text-decoration:none;"
+         title="Eliminar"
+         onclick="return confirm('¿Seguro que deseas eliminar este archivo?');">
+        ×
+      </a>
+
+    </div>
+  {% endfor %}
+</div>
     </div>
 
     <script>
